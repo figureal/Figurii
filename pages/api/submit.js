@@ -44,6 +44,6 @@ export default async function handler(req, res) {
   // Nếu phương thức không phải POST hoặc OPTIONS, trả về lỗi Method Not Allowed
   return res.status(405).json({
     success: false,
-    message: 'Method Not Allowed'
+    message: 'Sai roi nhe con lon'
   });
 }
