@@ -1,4 +1,5 @@
-export default function handler(req, res) {
+// Đảm bảo API có thể parse JSON
+export default async function handler(req, res) {
   // Thiết lập CORS cho mọi yêu cầu
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -12,6 +13,7 @@ export default function handler(req, res) {
   // Xử lý POST
   if (req.method === 'POST') {
     try {
+      // Đảm bảo rằng body đã được parse đúng
       const { username, password } = req.body;
 
       if (!username || !password) {
