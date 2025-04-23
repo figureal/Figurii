@@ -31,19 +31,21 @@
       cursor: pointer;
     }
 
-    .login-popup {
-      display: none;
-      position: fixed;
-      top: 30%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 100;
-      background-color: white;
-      border: 1px solid #ccc;
-      padding: 30px 40px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.4);
-      width: 400px;
-    }
+.login-popup {
+  display: none;
+  position: fixed;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 30px 40px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.4);
+  width: 387px; /* 👈 Giảm bớt 0.5cm */
+  border-radius: 15px; /* 👈 Bo tròn khung */
+}
+
 
     .login-popup h3 {
       margin-top: 0;
