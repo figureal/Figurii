@@ -2,49 +2,73 @@ export const config = {
   runtime: 'edge',
 };
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+};
+
 export default async function handler(req) {
   const { method } = req;
 
-  // Kiểm tra phương thức OPTIONS để xử lý CORS
+  // Xử lý preflight CORS request
   if (method === 'OPTIONS') {
     return new Response(null, {
       status: 204,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type',
-      },
+      headers: corsHeaders,
     });
   }
 
-  // Kiểm tra phương thức POST
+  // Xử lý POST request
   if (method === 'POST') {
     try {
-      // Kiểm tra nếu dữ liệu có trong body không và phải là JSON
-      const requestBody = await req.json();
-
-      // Kiểm tra nếu dữ liệu có trường 'username' và 'password'
-      const { username, password } = requestBody;
+      const body = await req.json();
+      const { username, password } = body;
 
       if (!username || !password) {
-        return new Response('Bad Request: Missing username or password', { status: 400 });
+        return new Response(JSON.stringify({
+          error: 'Thiếu username hoặc password'
+        }), {
+          status: 400,
+          headers: {
+            ...corsHeaders,
+            'Content-Type': 'application/json'
+          }
+        });
       }
 
       console.log('Nhận form:', { username, password });
 
-      // Trả về phản hồi thành công
       return new Response(JSON.stringify({ success: true }), {
         status: 200,
         headers: {
-          'Access-Control-Allow-Origin': '*',
-        },
+          ...corsHeaders,
+          'Content-Type': 'application/json'
+        }
       });
-    } catch (error) {
-      console.error('Lỗi khi xử lý dữ liệu:', error);
-      return new Response('Bad Request: Invalid JSON format', { status: 400 });
+    } catch (err) {
+      console.error('Lỗi khi parse JSON:', err);
+
+      return new Response(JSON.stringify({
+        error: 'Dữ liệu gửi không hợp lệ'
+      }), {
+        status: 400,
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json'
+        }
+      });
     }
   }
 
-  // Nếu không phải là POST hoặc OPTIONS
-  return new Response('Method Not Allowed', { status: 405 });
+  // Các method khác không hỗ trợ
+  return new Response(JSON.stringify({
+    error: 'Method Not Allowed'
+  }), {
+    status: 405,
+    headers: {
+      ...corsHeaders,
+      'Content-Type': 'application/json'
+    }
+  });
 }
